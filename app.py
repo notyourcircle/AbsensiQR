@@ -98,6 +98,7 @@ def data_count():
     records = get_data_from_google_sheets(sheet)
     # Don't forget to change what any position/job title at your company
     filtered_records = [record for record in records if record['Posisi'] in ['BPMD Non Utusan', 'Anggota MD']]
+    # Change total company employees
     total_peserta = 63
     return {'count': len(filtered_records), 'max': total_peserta}
 
