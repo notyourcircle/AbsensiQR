@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Absensi QR Data Page{% endblock %}
+
+{% block content %}
+<div class="col-lg-2 col-md-4 hidden-sm hidden-xs">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="media">
+                <h4 style="border-bottom: 2px solid #9D9D9D; padding-bottom: 10px;">Rangkuman Data</h4>
+                {% for posisi, count in position_counts.items() %}
+                <p>
+                    {{ posisi }} = {{ count }}
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Section -->  
+<div class="container">
+    <div class="row">
+            <h4>Total Kehadiran</h4>
+            <div class="progress">
+                <div class="progress-bar" id="attendance-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+            </div>
+        <h4>Data Kehadiran Sidang MD</h4>
+        {% if records %}
+        <table class="points_table">
+            <thead>
+                <tr>
+                    <th class="col-xs-1">Id</th>
+                    <th class="col-xs-4">Nama</th>
+                    <th class="col-xs-3">Posisi</th>
+                    <th class="col-xs-2">Tanggal</th>
+                    <th class="col-xs-2">Jam</th>
+                </tr>
+            </thead>
+            <tbody class="points_table_scrollbar">
+                {% for record in records %}
+                <tr class="{% if loop.index is odd %}odd{% else %}even{% endif %}">
+                    <td class="col-xs-1">{{ loop.index }}</td>
+                    <td class="col-xs-4">{{ record['Nama'] }}</td>
+                    <td class="col-xs-3">{{ record['Posisi'] }}</td>
+                    <td class="col-xs-2">{{ record['Tanggal'] }}</td>
+                    <td class="col-xs-2">{{ record['Jam'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="text-center" style="padding: 50px 0;">
+                    <p style="font-size: 18px; font-weight: bold;">Tidak ada data kehadiran yang tersedia.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div style="padding-bottom:20px;"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function updateProgressBar() {
+            fetch('/data_count')
+                .then(response => response.json())
+                .then(data => {
+                    const count = data.count;
+                    const max = data.max;
+
+                    const percentage = Math.min((count / max) * 100, 100);
+
+                    const progressBar = document.getElementById('attendance-progress');
+                    progressBar.style.width = percentage + '%';
+                    progressBar.setAttribute('aria-valuenow', percentage);
+                    progressBar.innerText = Math.round(percentage) + '%';
+                })
+                .catch(error => console.error('Error fetching data count:', error));
+        }
+
+        window.onload = updateProgressBar;
+</script>
+{% endblock %}

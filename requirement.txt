@@ -1,0 +1,7 @@
+Flask
+Flask-SocketIO
+opencv-python
+pandas
+qrcode
+gspread
+oauth2client
