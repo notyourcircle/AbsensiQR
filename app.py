@@ -11,7 +11,8 @@ scanned_data = set()
 scanned_data_lock = threading.Lock()
 detector = cv2.QRCodeDetector()
 sheet = init_google_sheets()
-camera_ids = [1, 2, 3, 4] 
+# Replace with the total camera you have 
+camera_ids = [0, 1, 2, 3, 4] 
 camera_threads = {}
 
 def read_qr_codes(frame, detector):
